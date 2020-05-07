@@ -1,0 +1,8 @@
+<div *ngIf="books.length == 0" class="book-list-container">
+    <mat-card>
+        <span class="no-books-message">There are no books registered</span>
+    </mat-card>
+</div>
+<div *ngIf="books.length > 0" class="book-list-container">
+    <app-book-list-item *ngFor="let book of books" [book]="book" (bookMarkedAsReadEvent)="removeBook($event)"></app-book-list-item>
+</div>
