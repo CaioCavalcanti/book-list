@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Book } from '../models/book';
+import { BookService } from '../services/book.service';
 
 @Component({
   selector: 'app-book-list',
@@ -8,33 +9,19 @@ import { Book } from '../models/book';
 })
 export class BookListComponent implements OnInit {
   books: Book[] = [];
-  constructor() { }
+
+  constructor(private booksService: BookService) { }
 
   ngOnInit(): void {
-    this.newBook();
+    this.loadBooks();
   }
 
-  newBook(): void {
-    setTimeout(() => {
-      const newBook = this.getBook();
-      this.books.push(newBook);
-      if (this.books.length < 5) {
-        this.newBook();
-      }
-    }, 3000);
+  loadBooks(): void {
+    this.booksService.getBooks()
+      .subscribe((books: Book[]) => this.books = books);
   }
 
   removeBook(bookId: string): void {
     this.books = this.books.filter(book => book.id != bookId);
-  }
-
-  getBook(): Book {
-    const bookId = (this.books.length + 1).toString();
-    return {
-      id: bookId,
-      title: `Book ${bookId}`,
-      author: "Caio Cavalcanti",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-    }
   }
 }
