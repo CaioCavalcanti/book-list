@@ -32,9 +32,9 @@ export class BookListComponent implements OnInit {
     const bookId = (this.books.length + 1).toString();
     return {
       id: bookId,
-      title: `Test ${bookId}`,
-      author: "Caio",
-      description: "Lorem Ipsum"
+      title: `Book ${bookId}`,
+      author: "Caio Cavalcanti",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
     }
   }
 }
