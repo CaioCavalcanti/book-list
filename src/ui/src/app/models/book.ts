@@ -1,6 +1,8 @@
 export interface Book {
-    id: string;
+    isbn: string;
     title: string;
-    author: string;
+    authors: string[];
     description: string;
+    shelved: boolean;
+    reading: boolean;
 }

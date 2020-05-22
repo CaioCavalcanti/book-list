@@ -1,12 +1,10 @@
-.mat-card {
+mat-card {
     margin-bottom: 1rem;
-}
 
-mat-card-actions {
-    button {
-        margin-right: 0.75rem;
+    mat-card-title {
+        font-size: 14px;
     }
-    
+
     mat-progress-bar {
         margin-bottom: 0.75rem;
     }

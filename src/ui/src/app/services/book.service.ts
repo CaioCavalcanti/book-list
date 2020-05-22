@@ -12,7 +12,20 @@ export class BookService {
 
   constructor(private httpClient: HttpClient) { }
 
+  addBook(book: Book): Observable<Book> {
+    return this.httpClient.post<Book>(this.booksUrl, book);
+  }
+
+  deleteBook(isbn: string): Observable<any> {
+    return this.httpClient.delete<any>(`${this.booksUrl}/${isbn}`);
+  }
+
   getBooks(): Observable<Book[]> {
     return this.httpClient.get<Book[]>(this.booksUrl);
+  }
+
+  search(title: string): Observable<Book[]> {
+    const url = `${this.booksUrl}/search?title=${title}`;
+    return this.httpClient.get<Book[]>(url);
   }
 }

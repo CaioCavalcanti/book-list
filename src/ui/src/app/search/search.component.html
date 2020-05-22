@@ -1,0 +1,7 @@
+<mat-form-field>
+    <mat-label>Title</mat-label>
+    <input matInput placeholder="Ex. Microservices" [(ngModel)]="title" (ngModelChange)="changed($event)">
+</mat-form-field>
+
+<mat-spinner *ngIf="isSearching" color="primary"></mat-spinner>
+<app-search-result *ngIf="!isSearching && title" [results]="results"></app-search-result>

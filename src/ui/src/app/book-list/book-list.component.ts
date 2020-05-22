@@ -41,12 +41,12 @@ export class BookListComponent implements OnInit {
   }
 
   removeBook(bookId: string): void {
-    const bookToRemove = this.books.find(book => book.id == bookId);
-    this.books = this.books.filter(book => book.id != bookId);
-    this.showNotification(`Book '${bookToRemove.title}' marked as read`);
+    const bookToRemove = this.books.find(book => book.isbn == bookId);
+    this.books = this.books.filter(book => book.isbn != bookId);
+    this.showNotification(`Book '${bookToRemove.title}' removed`);
   }
 
   showNotification(message: string): void {
-    this.snackBar.open(message, "Close", { duration: 5000});
+    this.snackBar.open(message, "Close", { duration: 5000 });
   }
 }

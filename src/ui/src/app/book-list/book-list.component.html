@@ -5,5 +5,7 @@
     </mat-card>
 </div>
 <div *ngIf="!isLoading && books.length > 0" class="book-list-container">
-    <app-book-list-item *ngFor="let book of books" [book]="book" (bookMarkedAsReadEvent)="removeBook($event)" [@scale]="'in'"></app-book-list-item>
+    <app-book-list-item *ngFor="let book of books" [book]="book" (bookMarkedAsReadEvent)="removeBook($event)"
+        (bookRemovedEvent)="removeBook($event)" [@scale]="'in'">
+    </app-book-list-item>
 </div>
