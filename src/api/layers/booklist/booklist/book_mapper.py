@@ -15,23 +15,43 @@ def map_to_dto(table_item):
         "isbn": table_item.get('isbn'),
         "title": table_item.get('title'),
         "authors": table_item.get('authors'),
-        "created_at": get_iso(table_item.get('created_at')),
-        "updated_at": get_iso(table_item.get('updated_at')),
+        "state": table_item.get('state'),
+        "createdAt": get_iso(table_item.get('createdAt')),
+        "updatedAt": get_iso(table_item.get('updatedAt')),
     }
 
 
-def map_to_item(data):
-    isbn = data.get('isbn')
-    if isbn is None:
-        raise MissingRequiredFieldError('isbn')
-
+def map_to_new_item(data):
+    isbn = get_required_field(data, 'isbn')
+    title = get_required_field(data, 'title')
+    authors = get_required_field(data, 'authors')
     return {
         "isbn": isbn,
-        "title": data.get("title"),
-        "authors": data.get("authors"),
-        "created_at": None,
-        "updated_at": None
+        "title": title,
+        "authors": authors,
+        "state": data.get("state", "shelved"),
+        "createdAt": None,
+        "updatedAt": None
     }
+
+
+def map_to_update_item(existing_item, changes):
+    state = get_required_field(changes, 'state')
+    return {
+        "isbn": existing_item['isbn'],
+        "title": existing_item['title'],
+        "authors": existing_item['authors'],
+        "state": state,
+        "createdAt": existing_item['createdAt'],
+        "updatedAt": None  # Repository will handle this
+    }
+
+
+def get_required_field(data, field_name):
+    value = data.get(field_name)
+    if value is None:
+        raise MissingRequiredFieldError(field_name)
+    return value
 
 
 def get_iso(timestamp):

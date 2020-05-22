@@ -11,29 +11,32 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class BookListItemComponent implements OnInit {
   @Input() book: Book;
   @Output() bookMarkedAsReadEvent = new EventEmitter<string>();
-  @Output() bookRemovedEvent = new EventEmitter<string>();
   isLoading = false;
 
-  constructor(private bookService: BookService, private snackBar: MatSnackBar) { }
+  constructor(private bookService: BookService) { }
 
   ngOnInit(): void {
   }
 
-  markAsRead(): void {
-    this.bookMarkedAsReadEvent.emit(this.book.isbn);
+  startReading(): void {
+    this.update('reading');
+  }
+
+  stopReading(): void {
+    this.update('shelved');
+  }
+
+  finish(): void {
+    this.update('finished');
   }
 
   remove(): void {
-    this.isLoading = true;
-    this.bookService.deleteBook(this.book.isbn)
-      .subscribe(
-        (data: any) => this.bookRemovedEvent.emit(this.book.isbn),
-        (error: any) => this.showNotification("Could not remove book")
-      )
-      .add(() => this.isLoading = false);
+    this.bookService.delete(this.book.isbn);
   }
 
-  showNotification(message: string): void {
-    this.snackBar.open(message, "Close", { duration: 5000 });
+  update(newState: string): void {
+    const book = { ...this.book };
+    book.state = newState;
+    this.bookService.update(book);
   }
 }

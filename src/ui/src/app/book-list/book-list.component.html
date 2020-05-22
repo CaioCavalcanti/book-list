@@ -1,11 +1,9 @@
 <div *ngIf="books.length == 0" class="book-list-container">
-    <mat-spinner *ngIf="isLoading" color="primary"></mat-spinner>
-    <mat-card *ngIf="!isLoading" [@scale]="'in'">
+    <mat-card [@scale]="'in'">
         <span class="no-books-message">There are no books registered</span>
     </mat-card>
 </div>
-<div *ngIf="!isLoading && books.length > 0" class="book-list-container">
-    <app-book-list-item *ngFor="let book of books" [book]="book" (bookMarkedAsReadEvent)="removeBook($event)"
-        (bookRemovedEvent)="removeBook($event)" [@scale]="'in'">
+<div *ngIf="books.length > 0" class="book-list-container">
+    <app-book-list-item *ngFor="let book of books" [book]="book" [@scale]="'in'">
     </app-book-list-item>
 </div>

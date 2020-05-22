@@ -8,23 +8,19 @@
     <mat-grid-tile colspan="4" rowspan="1">
         <mat-grid-tile-header>Reading now</mat-grid-tile-header>
         <div class="grid-tile-body">
-            <p>Mussum Ipsum, cacilds vidis litro abertis. Posuere libero varius. Nullam a nisl ut ante blandit
-                hendrerit.
-                Aenean sit amet nisi. Em pé sem cair, deitado sem dormir, sentado sem cochilar e fazendo pose. Quem num
-                gosta di mé, boa gentis num é. Vehicula non. Ut sed ex eros. Vivamus sit amet nibh non tellus tristique
-                interdum.</p>
+            <app-book-list [books]="reading$ | async"></app-book-list>
         </div>
     </mat-grid-tile>
     <mat-grid-tile colspan="2" rowspan="2">
         <mat-grid-tile-header>Up next</mat-grid-tile-header>
         <div class="grid-tile-body">
-            <app-book-list></app-book-list>
+            <app-book-list [books]="upNext$ | async"></app-book-list>
         </div>
     </mat-grid-tile>
     <mat-grid-tile colspan="2" rowspan="2">
         <mat-grid-tile-header>Finished</mat-grid-tile-header>
         <div class="grid-tile-body">
-            <app-book-list></app-book-list>
+            <app-book-list [books]="finished$ | async"></app-book-list>
         </div>
     </mat-grid-tile>
 </mat-grid-list>

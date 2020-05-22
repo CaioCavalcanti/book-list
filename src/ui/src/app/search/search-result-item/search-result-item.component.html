@@ -4,9 +4,8 @@
         <mat-card-subtitle *ngIf="result.authors">{{result.authors.join(', ')}}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-actions>
-        <mat-progress-bar mode="indeterminate" *ngIf="isAdding"></mat-progress-bar>
-        <button mat-flat-button color="primary" (click)="add()" [disabled]="result.shelved || isAdding">
-            {{ result.shelved ? 'Added' : 'Add' }}
+        <button mat-flat-button color="primary" (click)="add()" [disabled]="isShelved">
+            {{ isShelved ? 'Added' : 'Add' }}
         </button>
     </mat-card-actions>
 </mat-card>

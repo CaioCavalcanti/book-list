@@ -3,6 +3,7 @@ export interface Book {
     title: string;
     authors: string[];
     description: string;
-    shelved: boolean;
-    reading: boolean;
+    state: string;
+    createdAt: string;
+    updatedAt: string;
 }

@@ -18,7 +18,7 @@ Globals:
         CORS_ALLOWED_ORIGINS: "'http://localhost:4200'"
   Api:
     Cors:
-      AllowMethods: "'OPTIONS,GET,POST,DELETE'"
+      AllowMethods: "'OPTIONS,GET,POST,PUT,DELETE'"
       AllowHeaders: "'Content-Type'"
       AllowOrigin: "'http://localhost:4200'"
 
@@ -92,6 +92,23 @@ Resources:
             RestApiId: !Ref BookListApi
             Path: /api/books
             Method: post
+
+  PutBookFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/post_book/
+      Handler: app.lambda_handler
+      Runtime: python3.8
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref BooksTable
+      Events:
+        PutBook:
+          Type: Api
+          Properties:
+            RestApiId: !Ref BookListApi
+            Path: /api/books/{isbn}
+            Method: put
 
   DeleteBookFunction:
     Type: AWS::Serverless::Function

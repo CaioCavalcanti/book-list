@@ -10,11 +10,13 @@ from booklist.utils import response_factory, logger
 
 def lambda_handler(event, context):
     try:
+        isbn = event['pathParameters']['isbn']
+        existing_book = book_repository.get_book(isbn)
         data = json.loads(event['body'])
-        new_book = book_mapper.map_to_new_item(data)
-        created_book = book_repository.add_book(new_book)
-        created_book_dto = book_mapper.map_to_dto(created_book)
-        return response_factory.created(created_book_dto)
+        book_changes = book_mapper.map_to_update_item(existing_book, data)
+        updated_book = book_repository.update_book(book_changes)
+        updated_book_dto = book_mapper.map_to_dto(updated_book)
+        return response_factory.ok(updated_book_dto)
     except MissingRequiredFieldError as ex:
         return response_factory.bad_request(ex.get_validation_errors())
     except:

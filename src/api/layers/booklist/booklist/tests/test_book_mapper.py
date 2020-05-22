@@ -17,8 +17,8 @@ def test_map_to_item():
     }
     expected_book_item = {
         "isbn": data['isbn'],
-        "created_at": None,
-        "updated_at": None
+        "createdAt": None,
+        "updatedAt": None
     }
     book_item = book_mapper.map_to_item(data)
     assert book_item == expected_book_item

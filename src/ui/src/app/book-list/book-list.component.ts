@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Book } from '../models/book';
 import { BookService } from '../services/book.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-book-list',
@@ -22,31 +23,11 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
   ]
 })
 export class BookListComponent implements OnInit {
-  books: Book[] = [];
-  isLoading: boolean = true;
+  @Input() state: string;
+  @Input() books: Book[] = [];
 
-  constructor(private booksService: BookService, private snackBar: MatSnackBar) { }
+  constructor(private booksService: BookService) { }
 
   ngOnInit(): void {
-    this.loadBooks();
-  }
-
-  loadBooks(): void {
-    this.booksService.getBooks()
-      .subscribe(
-        (books: Book[]) => this.books = books,
-        (error: any) => this.showNotification("Could not load books")
-      )
-      .add(() => this.isLoading = false);
-  }
-
-  removeBook(bookId: string): void {
-    const bookToRemove = this.books.find(book => book.isbn == bookId);
-    this.books = this.books.filter(book => book.isbn != bookId);
-    this.showNotification(`Book '${bookToRemove.title}' removed`);
-  }
-
-  showNotification(message: string): void {
-    this.snackBar.open(message, "Close", { duration: 5000 });
   }
 }
