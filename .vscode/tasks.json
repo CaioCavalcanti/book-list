@@ -1,0 +1,96 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build SAM container",
+            "type": "shell",
+            "command": "sam",
+            "options": {
+                "cwd": "${workspaceFolder}/src/api"
+            },
+            "args": [
+                "build",
+                "--use-container"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "group": "build"
+        },
+        {
+            "label": "Start local DynamoDB on Docker",
+            "type": "shell",
+            "command": "docker-compose",
+            "options": {
+                "cwd": "${workspaceFolder}/src/api"
+            },
+            "args": [
+                "-f",
+                "docker-compose-dynamodb-local.yml",
+                "up",
+                "-d"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": true,
+                "clear": false
+            }
+        },
+        {
+            "label": "Start local API",
+            "type": "shell",
+            "command": "sam",
+            "options": {
+                "cwd": "${workspaceFolder}/src/api"
+            },
+            "args": [
+                "local",
+                "start-api",
+                "--env-vars",
+                "env.local.json",
+                "--docker-network",
+                "api_book-list"
+            ]
+        },
+        {
+            "label": "Run API tests with pytest",
+            "type": "shell",
+            "command": "python3",
+            "options": {
+                "cwd": "${workspaceFolder}/src/api"
+            },
+            "args": [
+                "-m",
+                "pytest"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Start UI",
+            "command": "npm",
+            "options": {
+                "cwd": "${workspaceFolder}/src/ui"
+            },
+            "args": [
+                "start"
+            ],
+            "group": "build",
+            "problemMatcher": [
+                "$tsc"
+            ]
+        }
+    ]
+}
