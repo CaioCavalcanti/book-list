@@ -1,0 +1,128 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  book-list
+
+  Sample SAM Template for book-list
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 60
+    Layers:
+      - !Ref BookListLayer
+    Environment:
+      Variables:
+        DYNAMODB_TABLE_NAME: !Ref BooksTable
+        DYNAMODB_ENDPOINT: ""
+        CORS_ALLOWED_ORIGINS: "'http://localhost:4200'"
+  Api:
+    Cors:
+      AllowMethods: "'OPTIONS,GET,POST,DELETE'"
+      AllowHeaders: "'Content-Type'"
+      AllowOrigin: "'http://localhost:4200'"
+
+Resources:
+  BookListApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+
+  BookList:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: layers/booklist
+      Handler: dummy.lambda_handler
+      Runtime: python3.8
+  
+  BookListLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: BookListLayer
+      Description: Layer with shared code for Books API
+      ContentUri: ./.aws-sam/build/Booklist
+      CompatibleRuntimes:
+        - python3.8
+      RetentionPolicy: Delete
+
+  GetBooksFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/get_books/
+      Handler: app.lambda_handler
+      Runtime: python3.8
+      Policies: 
+        - DynamoDBReadPolicy:
+            TableName: !Ref BooksTable
+      Events:
+        GetBooks:
+          Type: Api
+          Properties:
+            RestApiId: !Ref BookListApi
+            Path: /api/books
+            Method: get
+
+  SearchBooksFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/search_books/
+      Handler: app.lambda_handler
+      Runtime: python3.8
+      Events:
+        GetBooks:
+          Type: Api
+          Properties:
+            RestApiId: !Ref BookListApi
+            Path: /api/books/search
+            Method: get
+
+  PostBookFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/post_book/
+      Handler: app.lambda_handler
+      Runtime: python3.8
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref BooksTable
+      Events:
+        PostBook:
+          Type: Api
+          Properties:
+            RestApiId: !Ref BookListApi
+            Path: /api/books
+            Method: post
+
+  DeleteBookFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/delete_book/
+      Handler: app.lambda_handler
+      Runtime: python3.8
+      Policies: 
+        - DynamoDBCrudPolicy:
+            TableName: !Ref BooksTable
+      Events:
+        DeleteBook:
+          Type: Api
+          Properties:
+            RestApiId: !Ref BookListApi
+            Path: /api/books/{isbn}
+            Method: delete
+
+  BooksTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: "Books"
+      AttributeDefinitions:
+        - 
+          AttributeName: "isbn"
+          AttributeType: "S"
+      KeySchema:
+        - 
+          AttributeName: "isbn"
+          KeyType: "HASH"
+      BillingMode: PAY_PER_REQUEST
+      Tags:
+        - Key: app
+          Value: book-list
