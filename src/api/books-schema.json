@@ -1,0 +1,22 @@
+{
+    "TableName": "Books",
+    "AttributeDefinitions": [
+        {
+            "AttributeName": "isbn",
+            "AttributeType": "S"
+        }
+    ],
+    "KeySchema": [
+        {
+            "AttributeName": "isbn",
+            "KeyType": "HASH"
+        }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "Tags": [
+        {
+            "Key": "app",
+            "Value": "book-list"
+        }
+    ]
+}
