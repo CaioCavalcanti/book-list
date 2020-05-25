@@ -6,6 +6,15 @@ Description: >
   SAM Template for Book List API
 
 Parameters:
+  ApiDomainName:
+    Type: String
+    Default: ""
+  ApiDomainCertificateArn:
+    Type: String
+    Default: ""
+  Route53HostedZoneId:
+    Type: String
+    Default: ""
   DynamoDbRegion:
     Type: String
     Default: local
@@ -27,11 +36,6 @@ Globals:
         DYNAMODB_REGION: !Ref DynamoDbRegion
         DYNAMODB_ENDPOINT: !Ref DynamoDbEndpoint
         CORS_ALLOWED_ORIGINS: !Ref CorsAllowedOrigins
-  Api:
-    Cors:
-      AllowMethods: "'OPTIONS,GET,POST,PUT,DELETE'"
-      AllowHeaders: "'Content-Type'"
-      AllowOrigin: !Ref CorsAllowedOrigins
 
 Resources:
   BookListApi:
@@ -40,6 +44,18 @@ Resources:
       StageName: Prod
       Auth:
         ApiKeyRequired: true
+      Cors:
+        AllowMethods: "'OPTIONS,GET,POST,PUT,DELETE'"
+        AllowHeaders: "'Content-Type'"
+        AllowOrigin: !Ref CorsAllowedOrigins
+      Domain:
+        DomainName: !Ref ApiDomainName
+        CertificateArn: !Ref ApiDomainCertificateArn
+        EndpointConfiguration: EDGE
+        BasePath:
+          - /book-list
+        Route53:
+          HostedZoneId: !Ref Route53HostedZoneId
 
   BookList:
     Type: AWS::Serverless::Function
