@@ -56,6 +56,7 @@ Resources:
           - /book-list
         Route53:
           HostedZoneId: !Ref Route53HostedZoneId
+          IpV6: true
 
   BookList:
     Type: AWS::Serverless::Function
