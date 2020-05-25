@@ -49,7 +49,10 @@ def create_response(status_code, data=None):
 
 
 def get_default_headers():
+    # Origins have single quotes (i.e. 'http://localhost') on env variables
+    # for a API Gateway restrictions, so we clean it here
+    origins = environ["CORS_ALLOWED_ORIGINS"].replace("'", "")
     return {
-        "Access-Control-Allow-Origin": environ["CORS_ALLOWED_ORIGINS"],
+        "Access-Control-Allow-Origin": origins,
         "Content-Type": "application/json"
     }
