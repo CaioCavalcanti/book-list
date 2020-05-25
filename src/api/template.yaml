@@ -44,8 +44,8 @@ Resources:
       StageName: Prod
       TracingEnabled: true
       Cors:
-        AllowMethods: "OPTIONS,GET,POST,PUT,DELETE"
-        AllowHeaders: "Content-Type'"
+        AllowMethods: "'OPTIONS,GET,POST,PUT,DELETE'"
+        AllowHeaders: "'Content-Type'"
         AllowOrigin: !Ref CorsAllowedOrigins
       Domain:
         DomainName: !Ref ApiDomainName
