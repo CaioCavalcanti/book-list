@@ -53,7 +53,7 @@ Resources:
     Properties:
       LayerName: BookListLayer
       Description: Layer with shared code for Books API
-      ContentUri: ./.aws-sam/build/Booklist
+      ContentUri: ./.aws-sam/build/BookList
       CompatibleRuntimes:
         - python3.8
       RetentionPolicy: Delete
