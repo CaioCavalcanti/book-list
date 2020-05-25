@@ -42,18 +42,17 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
-      Auth:
-        ApiKeyRequired: true
+      TracingEnabled: true
       Cors:
-        AllowMethods: "'OPTIONS,GET,POST,PUT,DELETE'"
-        AllowHeaders: "'Content-Type'"
+        AllowMethods: "OPTIONS,GET,POST,PUT,DELETE"
+        AllowHeaders: "Content-Type'"
         AllowOrigin: !Ref CorsAllowedOrigins
       Domain:
         DomainName: !Ref ApiDomainName
         CertificateArn: !Ref ApiDomainCertificateArn
         EndpointConfiguration: EDGE
         BasePath:
-          - /book-list
+          - /booklist
         Route53:
           HostedZoneId: !Ref Route53HostedZoneId
           IpV6: true
