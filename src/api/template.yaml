@@ -3,30 +3,43 @@ Transform: AWS::Serverless-2016-10-31
 Description: >
   book-list
 
-  Sample SAM Template for book-list
+  SAM Template for Book List API
 
+Parameters:
+  DynamoDbRegion:
+    Type: String
+    Default: local
+  DynamoDbEndpoint:
+    Type: String
+    Default: "http://localhost:8000"
+  CorsAllowedOrigins:
+    Type: String
+    Default: "'http://localhost:4200'"
+  
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
     Timeout: 60
-    Layers:
-      - !Ref BookListLayer
+    Tracing: Active
     Environment:
       Variables:
         DYNAMODB_TABLE_NAME: !Ref BooksTable
-        DYNAMODB_ENDPOINT: ""
-        CORS_ALLOWED_ORIGINS: "'http://localhost:4200'"
+        DYNAMODB_REGION: !Ref DynamoDbRegion
+        DYNAMODB_ENDPOINT: !Ref DynamoDbEndpoint
+        CORS_ALLOWED_ORIGINS: !Ref CorsAllowedOrigins
   Api:
     Cors:
       AllowMethods: "'OPTIONS,GET,POST,PUT,DELETE'"
       AllowHeaders: "'Content-Type'"
-      AllowOrigin: "'http://localhost:4200'"
+      AllowOrigin: !Ref CorsAllowedOrigins
 
 Resources:
   BookListApi:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
+      Auth:
+        ApiKeyRequired: true
 
   BookList:
     Type: AWS::Serverless::Function
@@ -44,6 +57,8 @@ Resources:
       CompatibleRuntimes:
         - python3.8
       RetentionPolicy: Delete
+    DependsOn: 
+      - BookList
 
   GetBooksFunction:
     Type: AWS::Serverless::Function
@@ -54,6 +69,8 @@ Resources:
       Policies: 
         - DynamoDBReadPolicy:
             TableName: !Ref BooksTable
+      Layers:
+        - !Ref BookListLayer
       Events:
         GetBooks:
           Type: Api
@@ -68,6 +85,8 @@ Resources:
       CodeUri: functions/search_books/
       Handler: app.lambda_handler
       Runtime: python3.8
+      Layers:
+        - !Ref BookListLayer
       Events:
         GetBooks:
           Type: Api
@@ -85,6 +104,8 @@ Resources:
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref BooksTable
+      Layers:
+        - !Ref BookListLayer
       Events:
         PostBook:
           Type: Api
@@ -102,6 +123,8 @@ Resources:
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref BooksTable
+      Layers:
+        - !Ref BookListLayer
       Events:
         PutBook:
           Type: Api
@@ -119,6 +142,8 @@ Resources:
       Policies: 
         - DynamoDBCrudPolicy:
             TableName: !Ref BooksTable
+      Layers:
+        - !Ref BookListLayer
       Events:
         DeleteBook:
           Type: Api
@@ -139,7 +164,10 @@ Resources:
         - 
           AttributeName: "isbn"
           KeyType: "HASH"
-      BillingMode: PAY_PER_REQUEST
+      BillingMode: PROVISIONED
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
       Tags:
         - Key: app
           Value: book-list
