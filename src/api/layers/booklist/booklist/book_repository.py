@@ -41,6 +41,11 @@ def delete_book(isbn):
 
 def get_books_table():
     table_name = os.environ['DYNAMODB_TABLE_NAME']
-    endpoint_url = os.environ['DYNAMODB_ENDPOINT']
-    dynamodb = boto3.resource('dynamodb', endpoint_url=endpoint_url)
+    dynamo_kwargs = {}
+    region = os.environ['DYNAMODB_REGION']
+    if region == 'local':
+        dynamo_kwargs['endpoint_url'] = os.environ['DYNAMODB_ENDPOINT']
+    else:
+        dynamo_kwargs['region_name'] = region
+    dynamodb = boto3.resource('dynamodb', **dynamo_kwargs)
     return dynamodb.Table(table_name)
