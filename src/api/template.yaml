@@ -36,6 +36,12 @@ Globals:
         DYNAMODB_REGION: !Ref DynamoDbRegion
         DYNAMODB_ENDPOINT: !Ref DynamoDbEndpoint
         CORS_ALLOWED_ORIGINS: !Ref CorsAllowedOrigins
+  Api:
+    Cors:
+      AllowMethods: "'OPTIONS,GET,POST,PUT,DELETE'"
+      AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+      AllowOrigin: !Ref CorsAllowedOrigins
+    
 
 Resources:
   BookListApi:
@@ -43,10 +49,6 @@ Resources:
     Properties:
       StageName: Prod
       TracingEnabled: true
-      Cors:
-        AllowMethods: "'OPTIONS,GET,POST,PUT,DELETE'"
-        AllowHeaders: "'Content-Type'"
-        AllowOrigin: !Ref CorsAllowedOrigins
       Domain:
         DomainName: !Ref ApiDomainName
         CertificateArn: !Ref ApiDomainCertificateArn
